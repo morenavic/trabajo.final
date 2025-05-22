@@ -6,6 +6,7 @@ import com.backend.jpa.mapper.CarreraJpaMapper;
 import com.backend.jpa.mapper.UsuarioJpaMapper;
 import com.backend.jpa.repository.CarreraJpaRepository;
 import com.backend.jpa.repository.UsuarioJpaRepository;
+import com.backend.usuario.models.Carrera;
 import com.backend.usuario.models.Estado;
 import com.backend.usuario.models.Usuario;
 import com.backend.usuario.repositories.IUsuarioRepositorio;
@@ -24,7 +25,7 @@ public class UsuarioRepositorioImpl implements IUsuarioRepositorio {
     private final CarreraJpaMapper carreraJpaMapper;
 
 
-    // Constructor para la inyección de dependencias por Spring.
+    // Constructor para la inyección de dependencias.
     public UsuarioRepositorioImpl(UsuarioJpaRepository usuarioJpaRepository, CarreraJpaRepository carreraJpaRepository, UsuarioJpaMapper usuarioJpaMapper, CarreraJpaMapper carreraJpaMapper) {
         this.usuarioJpaRepository = usuarioJpaRepository;
         this.carreraJpaRepository = carreraJpaRepository;
@@ -39,24 +40,39 @@ public class UsuarioRepositorioImpl implements IUsuarioRepositorio {
 
     @Override
     @Transactional
-    public boolean guardarUsuario(Usuario usuario) {
-        // Obtener la carrera asociada
-        Optional<CarreraJpaEntity> carreraJpa = carreraJpaRepository.findById(usuario.getCarrera().getIdCarrera());
+    public boolean guardarUsuario(Usuario usuarioDominio) { // Renombrado a usuarioDominio para claridad
+        Carrera carreraDominio = usuarioDominio.getCarrera();
+        CarreraJpaEntity carreraJpaEntity = null; //Inicializado a null
 
-        if (carreraJpa.isEmpty()) {
-            throw new IllegalArgumentException("Carrera no encontrada.");
+        if (carreraDominio != null) {
+            //Si la carrera NO viene con un ID, es un error (las carreras son preexistentes)
+            if (carreraDominio.getIdCarrera() == null) {
+                throw new IllegalArgumentException("El ID de la carrera es obligatorio. Las carreras deben ser pre-existentes.");
+            }
+
+            //Si la carrera viene con un ID, intentamos buscarla en la DB
+            Optional<CarreraJpaEntity> existingCarreraJpa = carreraJpaRepository.findById(carreraDominio.getIdCarrera());
+
+            if (existingCarreraJpa.isPresent()) {
+                carreraJpaEntity = existingCarreraJpa.get(); // Asignamos la entidad JPA encontrada
+            } else {
+                // Si el ID de la carrera NO existe en la DB, lanzamos una excepción.
+                throw new IllegalArgumentException("Carrera con ID " + carreraDominio.getIdCarrera() + " no encontrada.");
+            }
         }
 
-        // Convertimos el objeto Usuario a entidad JPA incluyendo la carrera
-        UsuarioJpaEntity usuarioEntidad = usuarioJpaMapper.aEntidadJpa(usuario);
-        usuarioEntidad.setCarrera(carreraJpa.get()); // asignamos la carrera existente
+        // Convertimos el Usuario de Dominio a UsuarioJpaEntity
+        UsuarioJpaEntity usuarioJpaEntity = usuarioJpaMapper.aEntidadJpa(usuarioDominio);
 
-        // Guardamos el usuario en la base de datos
-        UsuarioJpaEntity entidadGuardada = usuarioJpaRepository.save(usuarioEntidad);
+        // Aseguramos que la CarreraJpaEntity esté asignada al UsuarioJpaEntity
+        usuarioJpaEntity.setCarrera(carreraJpaEntity);
 
-        // Si es nuevo, actualizamos el ID en el dominio
+        //Guardamos el UsuarioJpaEntity en la base de datos
+        UsuarioJpaEntity entidadGuardada = usuarioJpaRepository.save(usuarioJpaEntity);
+
+        //Si el usuario es nuevo (idUsuario se generó), actualizamos el ID en el objeto de dominio
         if (entidadGuardada.getIdUsuario() != null) {
-            usuario.setIdUsuario(entidadGuardada.getIdUsuario());
+            usuarioDominio.setIdUsuario(entidadGuardada.getIdUsuario());
         }
 
         return entidadGuardada.getIdUsuario() != null;

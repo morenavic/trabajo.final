@@ -100,6 +100,8 @@ public class Usuario {
         return carrera;
     }
 
+    public void setCarrera(Carrera carrera) {    }
+
     public String getEmail() {
         return email;
     }
@@ -158,21 +160,16 @@ public class Usuario {
         if (password.contains(" ")) {
             return true;
         }
-
         // Validaciones individuales
         boolean tieneMayuscula = password.matches(".*[A-Z].*");
         boolean tieneMinuscula = password.matches(".*[a-z].*");
         boolean tieneNumero = password.matches(".*\\d.*");
         boolean tieneEspecial = password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\",.<>/?].*");
-
         // Si falta alguno de los requerimientos → es insegura
         if (!tieneMayuscula || !tieneMinuscula || !tieneNumero || !tieneEspecial) {
             return true;
         }
-
         // Si pasó todos los filtros → es segura
         return false;
     }
-
-
 }

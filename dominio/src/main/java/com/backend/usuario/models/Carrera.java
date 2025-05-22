@@ -9,15 +9,21 @@ public class Carrera {
     private Integer idCarrera;
     private String nombreCarrera;
 
-    public Carrera(String nombreCarrera) {
-        this.idCarrera = null;
+    // Constructor para instanciaExistente()
+    private Carrera(Integer idCarrera, String nombreCarrera) {
+        this.idCarrera = idCarrera;
         this.nombreCarrera = nombreCarrera;
     }
 
-    public static Carrera instancia(String nombreCarrera) throws DatosIncompletosException, DatosInvalidosException{
+    // Constructor para instancia()
+    private Carrera(String nombreCarrera) {
+        this.nombreCarrera = nombreCarrera;
+    }
+
+    public static Carrera instancia(String nombreCarrera) throws DatosIncompletosException, DatosInvalidosException {
 
         // Validación de nombre nulo o vacío
-        if(nombreCarrera == null || nombreCarrera.trim().isBlank()){
+        if (nombreCarrera == null || nombreCarrera.trim().isBlank()) {
             throw new DatosIncompletosException("El nombre de la carrera es obligatorio.");
         }
 
@@ -36,11 +42,21 @@ public class Carrera {
         return new Carrera(nombreCarrera);
     }
 
-    public int getIdCarrera() {
+    // Nuevo metodo para rehidratar una carrera existente desde la base de datos
+    // Este se usará cuando la carrera ya tiene un ID.
+    public static Carrera instanciaExistente(Integer idCarrera, String nombreCarrera) throws DatosIncompletosException, DatosInvalidosException {
+        if (idCarrera == null) {
+            throw new DatosIncompletosException("El ID de la carrera es obligatorio para una instancia existente.");
+        }
+        return new Carrera(idCarrera, nombreCarrera);
+    }
+
+    public Integer getIdCarrera() {
         return idCarrera;
     }
 
     public String getNombreCarrera() {
         return nombreCarrera;
     }
+
 }

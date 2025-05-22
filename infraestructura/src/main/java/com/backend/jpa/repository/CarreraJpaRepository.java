@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface CarreraJpaRepository extends JpaRepository<CarreraJpaEntity, Integer> {
     Optional<CarreraJpaEntity> findByNombreCarrera(String nombreCarrera);
+    Optional<CarreraJpaEntity> findById(Integer id);
 }

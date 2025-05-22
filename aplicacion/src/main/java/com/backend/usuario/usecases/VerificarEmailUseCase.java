@@ -5,11 +5,9 @@ import com.backend.usuario.inputs.IVerificarEmailInput;
 import com.backend.usuario.models.Estado;
 import com.backend.usuario.models.Usuario;
 import com.backend.usuario.repositories.IUsuarioRepositorio;
-import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Service
 public class VerificarEmailUseCase implements IVerificarEmailInput {
 
     private final IUsuarioRepositorio iUsuarioRepositorio;

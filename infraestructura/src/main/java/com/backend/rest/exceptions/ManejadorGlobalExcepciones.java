@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
-@RestControllerAdvice // Combina @ControllerAdvice y @ResponseBody
+@RestControllerAdvice
 public class ManejadorGlobalExcepciones {
 
     // Logger para registrar los errores
@@ -44,8 +44,6 @@ public class ManejadorGlobalExcepciones {
     public ResponseEntity<String> handleDataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request) {
         logger.error("Error de integridad de datos (DataIntegrityViolationException): " + ex.getMessage() + " - URL: " + request.getDescription(false), ex);
         String message = "Conflicto de datos. Es posible que el email ya esté registrado o haya un problema de unicidad.";
-        // Aquí puedes intentar analizar ex.getCause() para dar un mensaje más específico
-        // Por ejemplo, si el mensaje de la causa contiene "Duplicate entry", puedes ser más preciso.
         return new ResponseEntity<>(message, HttpStatus.CONFLICT); // Generalmente 409 para unicidad
     }
 
@@ -58,7 +56,7 @@ public class ManejadorGlobalExcepciones {
     @ExceptionHandler(RuntimeException.class) // Captura todas las RuntimeException genéricas
     public ResponseEntity<String> handleRuntimeException(RuntimeException ex, WebRequest request) {
         logger.error("Error inesperado del sistema (RuntimeException): " + ex.getMessage() + " - URL: " + request.getDescription(false), ex);
-        return new ResponseEntity<>("Ocurrió un error interno inesperado. Por favor, contacte al soporte.", HttpStatus.INTERNAL_SERVER_ERROR); // 500 Internal Server Error
+        return new ResponseEntity<>("Ocurrió un error interno inesperado.", HttpStatus.INTERNAL_SERVER_ERROR); // 500 Internal Server Error
     }
 
     @ExceptionHandler(Exception.class)
