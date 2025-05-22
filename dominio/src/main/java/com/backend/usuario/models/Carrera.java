@@ -44,7 +44,7 @@ public class Carrera {
 
     // Nuevo metodo para rehidratar una carrera existente desde la base de datos
     // Este se usará cuando la carrera ya tiene un ID.
-    public static Carrera instanciaExistente(Integer idCarrera, String nombreCarrera) throws DatosIncompletosException, DatosInvalidosException {
+    public static Carrera instanciaExistente(Integer idCarrera, String nombreCarrera){
         if (idCarrera == null) {
             throw new DatosIncompletosException("El ID de la carrera es obligatorio para una instancia existente.");
         }

@@ -37,6 +37,21 @@ public class Usuario {
         this.fechaBaja = null; // Siempre null al crear
     }
 
+    public Usuario(Integer idUsuario, String nombreCompleto, Carrera carrera, String email, boolean emailVerificado, String password, String tokenVerificacion, Rol rol, Estado estado, String imagenPerfil, LocalDateTime fechaAlta, LocalDateTime fechaBaja) {
+        this.idUsuario = idUsuario;
+        this.nombreCompleto = nombreCompleto;
+        this.carrera = carrera;
+        this.email = email;
+        this.emailVerificado = emailVerificado;
+        this.password = password;
+        this.tokenVerificacion = tokenVerificacion;
+        this.rol = rol;
+        this.estado = estado;
+        this.imagenPerfil = imagenPerfil;
+        this.fechaAlta = fechaAlta;
+        this.fechaBaja = fechaBaja;
+    }
+
     public static Usuario instancia(String nombreCompleto, Carrera carrera, String email, String password)  throws DatosIncompletosException, DatosInvalidosException, PasswordInseguraException{
 
         // Validación de nombre nulo o vacío
@@ -83,6 +98,35 @@ public class Usuario {
         }
 
         return new Usuario(nombreCompleto, carrera, email, password);
+    }
+
+    //Nuevo metodo para rehidratar un usuario existente desde la base de datos
+    //Este se usará cuando el usuario ya tiene un ID.
+    public static Usuario instanciaExistente(
+            Integer idUsuario, String nombreCompleto, Carrera carrera, String email, String password,
+            Rol rol, Estado estado, boolean emailVerificado, String tokenVerificacion,
+            String imagenPerfil, LocalDateTime fechaAlta, LocalDateTime fechaBaja){
+
+        //Al rehidratar, el ID NO debe ser nulo.
+        if (idUsuario == null) {
+            throw new DatosIncompletosException("El ID de usuario es obligatorio para rehidratar una instancia existente.");
+        }
+
+        //Construir la instancia con los datos tal como vienen de la base de datos
+        return new Usuario(
+                idUsuario,
+                nombreCompleto,
+                carrera,
+                email,
+                emailVerificado,
+                password,
+                tokenVerificacion,
+                rol,
+                estado,
+                imagenPerfil,
+                fechaAlta,
+                fechaBaja
+        );
     }
 
     public int getIdUsuario() {
@@ -172,4 +216,6 @@ public class Usuario {
         // Si pasó todos los filtros → es segura
         return false;
     }
+
+
 }

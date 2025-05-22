@@ -1,6 +1,7 @@
 package com.backend.usuario.usecases;
 
-import com.backend.usuario.exceptions.UsuarioNoExisteException;
+import com.backend.usuario.exceptions.EmailYaVerificadoException;
+import com.backend.usuario.exceptions.TokenInvalidoException;
 import com.backend.usuario.inputs.IVerificarEmailInput;
 import com.backend.usuario.models.Estado;
 import com.backend.usuario.models.Usuario;
@@ -21,14 +22,22 @@ public class VerificarEmailUseCase implements IVerificarEmailInput {
         Optional<Usuario> usuarioOptional = iUsuarioRepositorio.buscarUsuarioPorTokenVerificacion(token);
 
         if (usuarioOptional.isEmpty()) {
-            throw new UsuarioNoExisteException("No existe un usuario con ese token.");
+            throw new TokenInvalidoException("El TOKEN no es válido o ya fue usado/expiró.");
         }
 
         Usuario usuario = usuarioOptional.get();
-        Integer idUsuario = usuario.getIdUsuario();
-        boolean estadoActualizado = iUsuarioRepositorio.actualizarEstadoUsuario(idUsuario, Estado.Activo);
-        boolean tokenLimpio = iUsuarioRepositorio.limpiarTokenVerificacion(idUsuario, null);
 
-        return estadoActualizado && tokenLimpio;
+        //Validar si el correo ya está verificado
+        if (usuario.getEmailVerificado()) {
+            throw new EmailYaVerificadoException("El correo electrónico ya ha sido verificado.");
+        }
+
+        //Se modifica el objeto de dominio
+        usuario.setEmailVerificado(true);
+        usuario.setTokenVerificacion(null);
+        usuario.setEstado(Estado.Activo);
+
+        // Se guarda el objeto de dominio completo.
+        return iUsuarioRepositorio.guardarUsuario(usuario);
     }
 }

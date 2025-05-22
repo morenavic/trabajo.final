@@ -1,6 +1,7 @@
 package com.backend.usuario.mapper;
 
 import com.backend.usuario.dtos.UsuarioRequest;
+import com.backend.usuario.models.Carrera;
 import com.backend.usuario.models.Usuario;
 
 public class UsuarioDtoMapper {
@@ -30,11 +31,37 @@ public class UsuarioDtoMapper {
     }
 
     public Usuario aEntidadDominio(UsuarioRequest usuarioRequest){
-        return Usuario.instancia(
-                usuarioRequest.getNombreCompleto(),
-                carreraDtoMapper.aEntidadDominio(usuarioRequest.getCarrera()),
-                usuarioRequest.getEmail(),
-                usuarioRequest.getPassword()
-        );
+
+        if (usuarioRequest == null) {
+            return null;
+        }
+
+        Carrera carreraDomain = carreraDtoMapper.aEntidadDominio(usuarioRequest.getCarrera());
+
+        if (usuarioRequest.getIdUsuario() == null) {
+            //Es un nuevo usuario (registro)
+            return Usuario.instancia(
+                    usuarioRequest.getNombreCompleto(),
+                    carreraDomain,
+                    usuarioRequest.getEmail(),
+                    usuarioRequest.getPassword()
+            );
+        } else {
+            //Es un usuario existente (ej. para actualización desde DTO)
+            return Usuario.instanciaExistente(
+                    usuarioRequest.getIdUsuario(),
+                    usuarioRequest.getNombreCompleto(),
+                    carreraDomain,
+                    usuarioRequest.getEmail(),
+                    usuarioRequest.getPassword(),
+                    usuarioRequest.getRol(),
+                    usuarioRequest.getEstado(),
+                    usuarioRequest.isEmailVerificado(),
+                    usuarioRequest.getTokenVerificacion(),
+                    usuarioRequest.getImagenPerfil(),
+                    usuarioRequest.getFechaAlta(),
+                    usuarioRequest.getFechaBaja()
+            );
+        }
     }
 }

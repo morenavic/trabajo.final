@@ -14,7 +14,12 @@ public class UsuarioJpaMapper {
     }
 
     public UsuarioJpaEntity aEntidadJpa(Usuario usuario) {
+        if (usuario == null) {
+            return null;
+        }
+
         return new UsuarioJpaEntity(
+                usuario.getIdUsuario(),
                 usuario.getNombreCompleto(),
                 carreraJpaMapper.aEntidadJpa(usuario.getCarrera()),
                 usuario.getEmail(),
@@ -34,12 +39,20 @@ public class UsuarioJpaMapper {
             return null;
         }
 
-        return Usuario.instancia(
+        return Usuario.instanciaExistente(
+                usuarioJpaEntity.getIdUsuario(),
                 usuarioJpaEntity.getNombreCompleto(),
                 carreraJpaMapper.aEntidadDominio(usuarioJpaEntity.getCarrera()),
                 usuarioJpaEntity.getEmail(),
-                usuarioJpaEntity.getPassword()
-
+                usuarioJpaEntity.getPassword(),
+                usuarioJpaEntity.getRol(),
+                usuarioJpaEntity.getEstado(),
+                usuarioJpaEntity.getEmailVerificado(),
+                usuarioJpaEntity.getTokenVerificacion(),
+                usuarioJpaEntity.getImagenPerfil(),
+                usuarioJpaEntity.getFechaAlta(),
+                usuarioJpaEntity.getFechaBaja()
         );
+
     }
 }

@@ -13,6 +13,17 @@ public class CarreraJpaMapper {
     }
 
     public Carrera aEntidadDominio(CarreraJpaEntity carreraJpaEntity) {
-        return Carrera.instancia(carreraJpaEntity.getNombreCarrera());
+        //Si la entidad JPA tiene un ID, usamos instanciaExistente
+        if (carreraJpaEntity.getIdCarrera() != null) {
+            return Carrera.instanciaExistente(
+                    carreraJpaEntity.getIdCarrera(),
+                    carreraJpaEntity.getNombreCarrera()
+            );
+        } else {
+            //Si la entidad JPA no tiene un ID, usamos instanciaExistente
+            return Carrera.instancia(
+                    carreraJpaEntity.getNombreCarrera()
+            );
+        }
     }
 }

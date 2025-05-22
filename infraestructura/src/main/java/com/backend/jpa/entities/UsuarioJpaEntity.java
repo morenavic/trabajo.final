@@ -58,9 +58,9 @@ public class UsuarioJpaEntity {
     @Column(name = "fecha_baja")
     private LocalDateTime fechaBaja; // Puede ser null
 
-    public UsuarioJpaEntity(String nombreCompleto, CarreraJpaEntity carrera, String email, boolean emailVerificado, String password, String tokenVerificacion, Rol rol, Estado estado, String imagenPerfil, LocalDateTime fechaAlta, LocalDateTime fechaBaja) {
+    public UsuarioJpaEntity(String nombreCompleto, CarreraJpaEntity carreraJpaEntity, String email, boolean emailVerificado, String password, String tokenVerificacion, Rol rol, Estado estado, String imagenPerfil, LocalDateTime fechaAlta, LocalDateTime fechaBaja) {
         this.nombreCompleto = nombreCompleto;
-        this.carrera = carrera;
+        this.carrera = carreraJpaEntity;
         this.email = email;
         this.emailVerificado = emailVerificado;
         this.password = password;
@@ -71,5 +71,21 @@ public class UsuarioJpaEntity {
         this.fechaAlta = fechaAlta;
         this.fechaBaja = fechaBaja;
     }
+    //Constructor necesario para actualizar datos del usuario
+    public UsuarioJpaEntity(int idUsuario, String nombreCompleto, CarreraJpaEntity carreraJpaEntity, String email, boolean emailVerificado, String password, String tokenVerificacion, Rol rol, Estado estado, String imagenPerfil, LocalDateTime fechaAlta, LocalDateTime fechaBaja) {
+        this.idUsuario = idUsuario;
+        this.nombreCompleto = nombreCompleto;
+        this.carrera = carreraJpaEntity;
+        this.email = email;
+        this.emailVerificado = emailVerificado;
+        this.password = password;
+        this.tokenVerificacion = tokenVerificacion;
+        this.rol = rol;
+        this.estado = estado;
+        this.imagenPerfil = imagenPerfil;
+        this.fechaAlta = fechaAlta;
+        this.fechaBaja = fechaBaja;
+    }
+
 }
 
