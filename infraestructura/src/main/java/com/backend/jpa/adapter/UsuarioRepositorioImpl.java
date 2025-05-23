@@ -10,6 +10,8 @@ import com.backend.usuario.models.Carrera;
 import com.backend.usuario.models.Usuario;
 import com.backend.usuario.repositories.IUsuarioRepositorio;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -22,7 +24,8 @@ public class UsuarioRepositorioImpl implements IUsuarioRepositorio {
     private final CarreraJpaRepository carreraJpaRepository; // Necesitamos el repo de Carrera también
     private final UsuarioJpaMapper usuarioJpaMapper;
     private final CarreraJpaMapper carreraJpaMapper;
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // Constructor para la inyección de dependencias.
     public UsuarioRepositorioImpl(UsuarioJpaRepository usuarioJpaRepository, CarreraJpaRepository carreraJpaRepository, UsuarioJpaMapper usuarioJpaMapper, CarreraJpaMapper carreraJpaMapper) {
@@ -65,6 +68,10 @@ public class UsuarioRepositorioImpl implements IUsuarioRepositorio {
 
         // Aseguramos que la CarreraJpaEntity esté asignada al UsuarioJpaEntity
         usuarioJpaEntity.setCarrera(carreraJpaEntity);
+
+        // Hasheamos la contraseña
+        String passwordHasheada = passwordEncoder.encode(usuarioDominio.getPassword());
+        usuarioJpaEntity.setPassword(passwordHasheada);
 
         //Guardamos el UsuarioJpaEntity en la base de datos
         UsuarioJpaEntity entidadGuardada = usuarioJpaRepository.save(usuarioJpaEntity);

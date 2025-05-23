@@ -9,6 +9,13 @@ import com.backend.usuario.usecases.RegistrarUsuarioUseCase;
 import com.backend.usuario.usecases.VerificarEmailUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 public class AplicacionConfig {
@@ -31,5 +38,23 @@ public class AplicacionConfig {
     @Bean
     public UsuarioDtoMapper userDtoMapper(CarreraDtoMapper carreraDtoMapper) {
         return new UsuarioDtoMapper(carreraDtoMapper); // Inyectamos el bean de CarreraDtoMapper
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    // Este Bean le dice a Spring que el endpoint de registro está permitido para todos.
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .csrf(AbstractHttpConfigurer::disable) // solo para pruebas con Postman, luego activar
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/usuarios/registrar").permitAll() // ruta pública
+                        .anyRequest().authenticated() // el resto requiere auth
+                )
+                .httpBasic(withDefaults()) // o formLogin, según lo que se use
+                .build();
     }
 }
