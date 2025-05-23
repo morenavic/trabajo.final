@@ -4,6 +4,7 @@ import com.backend.usuario.exceptions.DatosIncompletosException;
 import com.backend.usuario.exceptions.DatosInvalidosException;
 import com.backend.usuario.exceptions.PasswordInseguraException;
 import com.backend.usuario.models.Carrera;
+import com.backend.usuario.models.Rol;
 import com.backend.usuario.models.Usuario;
 import com.backend.usuario.models.Estado;
 
@@ -14,14 +15,35 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.jupiter.params.provider.NullSource;
 
+import java.time.LocalDateTime;
+
 
 public class UsuarioTest {
 
     private final Carrera carrera = Carrera.instancia("Tecnicatura Universitaria en Desarrollo de Aplicaciones Web");
 
     @Test
-    void instanciarUsuario_TodosLosAtributos_InstanciaCorrecta(){
+    void instanciarUsuario_AtributosParaRegistro_InstanciaCorrecta(){
         Usuario usuario = Usuario.instancia("Morena Gallardo",carrera,"more@gmail.com","Password!123");
+
+        Assertions.assertEquals("more@gmail.com",usuario.getEmail());
+        Assertions.assertEquals(Estado.Pendiente,usuario.getEstado());
+    }
+
+    @Test
+    void instanciarUsuarioExistente_TodosLosAtributos_InstanciaCorrecta(){
+        Usuario usuario = Usuario.instanciaExistente(1,
+                "Morena Gallardo",
+                carrera,
+                "more@gmail.com",
+                "Password!123",
+                Rol.Usuario,
+                Estado.Pendiente,
+                false,
+                "123456-d",
+                "Imagen.png",
+                LocalDateTime.now(),
+                null);
 
         Assertions.assertEquals("more@gmail.com",usuario.getEmail());
         Assertions.assertEquals(Estado.Pendiente,usuario.getEstado());
@@ -96,6 +118,16 @@ public class UsuarioTest {
         Assertions.assertThrows(PasswordInseguraException.class,
                 ()->Usuario.instancia("Morena Gallardo", carrera,"more@gmail.com", password));
     }
+
+    @Test
+    void instanciarUsuario_PasswordSegura_InstanciaCorrecta(){
+        String password = "Password!123";
+        Usuario usuario = Usuario.instancia("Morena Gallardo", carrera, "mg@gmail.com",password);
+
+        Assertions.assertEquals("Morena Gallardo", usuario.getNombreCompleto());
+    }
+
+
 
 }
 

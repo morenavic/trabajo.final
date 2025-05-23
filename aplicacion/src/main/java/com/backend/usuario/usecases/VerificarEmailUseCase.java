@@ -1,6 +1,7 @@
 package com.backend.usuario.usecases;
 
 import com.backend.usuario.exceptions.EmailYaVerificadoException;
+import com.backend.usuario.exceptions.ErrorDePersistenciaException;
 import com.backend.usuario.exceptions.TokenInvalidoException;
 import com.backend.usuario.inputs.IVerificarEmailInput;
 import com.backend.usuario.models.Estado;
@@ -21,6 +22,7 @@ public class VerificarEmailUseCase implements IVerificarEmailInput {
     public boolean verificarEmail(String token) {
         Optional<Usuario> usuarioOptional = iUsuarioRepositorio.buscarUsuarioPorTokenVerificacion(token);
 
+        //Validar si el toke es válido
         if (usuarioOptional.isEmpty()) {
             throw new TokenInvalidoException("El TOKEN no es válido o ya fue usado/expiró.");
         }

@@ -12,10 +12,18 @@ import org.junit.jupiter.params.provider.NullSource;
 public class CarreraTest {
 
     @Test
-    void instanciarCarrera_TodosLosAtributos_InstanciaCorrecta() {
+    void instanciarCarrera_AtributosParaRegistro_InstanciaCorrecta() {
         Carrera carrera = Carrera.instancia("Tecnicatura en Desarrollo Web");
 
         Assertions.assertEquals("Tecnicatura en Desarrollo Web", carrera.getNombreCarrera());
+    }
+
+    @Test
+    void instanciarCarreraExistente_TodosLosAtributos_InstanciaCorrecta() {
+        Carrera carrera = Carrera.instanciaExistente(1, "Tecnicatura en Desarrollo Web");
+
+        Assertions.assertEquals("Tecnicatura en Desarrollo Web", carrera.getNombreCarrera());
+        Assertions.assertEquals(1, carrera.getIdCarrera());
     }
 
     @ParameterizedTest
