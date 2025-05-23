@@ -72,7 +72,7 @@ public class UsuarioJpaEntity {
         this.fechaBaja = fechaBaja;
     }
     //Constructor necesario para actualizar datos del usuario
-    public UsuarioJpaEntity(int idUsuario, String nombreCompleto, CarreraJpaEntity carreraJpaEntity, String email, boolean emailVerificado, String password, String tokenVerificacion, Rol rol, Estado estado, String imagenPerfil, LocalDateTime fechaAlta, LocalDateTime fechaBaja) {
+    public UsuarioJpaEntity(Integer idUsuario, String nombreCompleto, CarreraJpaEntity carreraJpaEntity, String email, boolean emailVerificado, String password, String tokenVerificacion, Rol rol, Estado estado, String imagenPerfil, LocalDateTime fechaAlta, LocalDateTime fechaBaja) {
         this.idUsuario = idUsuario;
         this.nombreCompleto = nombreCompleto;
         this.carrera = carreraJpaEntity;

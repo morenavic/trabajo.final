@@ -129,7 +129,7 @@ public class Usuario {
         );
     }
 
-    public int getIdUsuario() {
+    public Integer getIdUsuario() {
         return idUsuario;
     }
 
