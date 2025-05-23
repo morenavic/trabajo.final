@@ -1,6 +1,5 @@
 package com.backend.usuario.repositories;
 
-import com.backend.usuario.models.Estado;
 import com.backend.usuario.models.Usuario;
 
 import java.util.Optional;
