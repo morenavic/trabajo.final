@@ -1,10 +1,8 @@
 package usuario.usecases;
 
 import com.backend.usuario.exceptions.EmailYaVerificadoException;
-import com.backend.usuario.exceptions.ErrorDePersistenciaException;
 import com.backend.usuario.exceptions.TokenInvalidoException;
 import com.backend.usuario.models.*;
-import com.backend.usuario.exceptions.UsuarioNoExisteException;
 import com.backend.usuario.repositories.IUsuarioRepositorio;
 import com.backend.usuario.usecases.VerificarEmailUseCase;
 import org.mockito.Mock;
@@ -13,7 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 
